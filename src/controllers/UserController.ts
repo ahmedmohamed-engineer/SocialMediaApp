@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/UserRepository";
-import { User } from "../models/User";
-import { DatabaseService } from "../services/DatabaseService";
+import { UserView } from "../views/UserView";
 
 
 export class UserController {
@@ -14,7 +13,7 @@ export class UserController {
   getAllUsers = async (req: Request, res: Response) => {
     try {
       const users = await this.userRepository.findAll();
-      res.status(200).json(users);
+      UserView.renderAll(req, res, users);
     } catch {
       res.status(500).json({ message: "Error getting users" });
     }
@@ -29,7 +28,7 @@ export class UserController {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json(user);
+      UserView.render(req, res, user);
     } catch {
       res.status(500).json({ message: "Error getting user" });
     }
